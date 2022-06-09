@@ -4,6 +4,8 @@ services:
   bitwarden:
     image: vaultwarden/server:latest
     restart: always
+    env_file:
+      - bitwarden.env
     networks:
       - default
       - reverseproxy_traefik
