@@ -18,7 +18,8 @@ services:
       - traefik.http.routers.bitwarden-websocket.rule=Host(`pwd.alex-j-butler.com`) && Path(`/notifications/hub`)
       - traefik.http.routers.bitwarden-websocket.service=bitwarden-websocket
       - traefik.http.services.bitwarden-websocket.loadbalancer.server.port=3012
-      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+      - "traefik.http.routers.bitwarden-ui.tls.certresolver=myresolver"
+      - "traefik.http.routers.bitwarden-websocket.tls.certresolver=myresolver"
 
 volumes:
   bitwarden:
