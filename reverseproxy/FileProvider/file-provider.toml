@@ -1,0 +1,20 @@
+[http]
+  # Add the router
+  [http.routers]
+    [http.routers.fluidd-https]
+      entryPoints = ["websecure"]
+      service = "service-fluidd"
+      rule = "Host(`3d.alex-j-butler.com`)"
+      [http.routers.fluidd-https.tls]
+        certresolver="myresolver"
+    [http.routers.fluidd-http]
+      entryPoints = ["web"]
+      service = "service-fluidd"
+      rule = "Host(`3d.alex-j-butler.com`)"
+      middlewares = ["redirect-https"]
+
+  # Add the service
+    [http.services.service-fluidd]
+      [http.services.service-fluidd.loadBalancer]
+        [[http.services.service-fluidd.loadBalancer.servers]]
+          url = "http://10.0.1.39"
