@@ -5,7 +5,7 @@ services:
     # The official v2 Traefik docker image
     image: traefik:v2.7
     # Enables the web UI and tells Traefik to listen to docker
-    command: --api.insecure=true --providers.docker --entryPoints.web.address=:80 --entryPoints.websecure.address=:443
+    command: --api.insecure=true --providers.docker --providers.docker.endpoint=unix:///var/run/docker.sock --entryPoints.web.address=:80 --entryPoints.websecure.address=:443
     labels:
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
@@ -22,7 +22,8 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - traefik
+      - reverseproxy_traefik
 
 networks:
-  traefik:
+  reverseproxy_traefik:
+    external: true
