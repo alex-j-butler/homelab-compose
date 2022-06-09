@@ -23,6 +23,3 @@
       [http.services.service-fluidd.loadBalancer]
         [[http.services.service-fluidd.loadBalancer.servers]]
           url = "http://10.0.1.39"
-
-- traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
-      - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
