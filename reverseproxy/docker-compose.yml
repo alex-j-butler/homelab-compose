@@ -28,6 +28,22 @@ services:
     networks:
       - reverseproxy_traefik
 
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth:2
+    env_file:
+      - traefik.env
+    environment:
+      # - PROVIDERS_OIDC_ISSUER_URL=https://login.microsoftonline.com/{tenant id}/v2.0
+      # - PROVIDERS_OIDC_CLIENT_ID=
+      # - PROVIDERS_OIDC_CLIENT_SECRET=""
+      # - SECRET=something-random
+    networks:
+      - reverseproxy_traefik
+    labels:
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181"
+
 networks:
   reverseproxy_traefik:
     external: true
