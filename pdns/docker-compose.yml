@@ -8,8 +8,6 @@ services:
       - MYSQL_DATABASE=powerdnsadmin
       - MYSQL_USER=pdns 
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:?SQL_PASS}
-    ports:
-      - 3306:3306 
     restart: always
     volumes:
       - pda-mysql:/var/lib/mysql
@@ -46,8 +44,11 @@ services:
   web_app:
     image: ngoduykhanh/powerdns-admin:latest
     container_name: powerdns_admin
-    ports:
-      - "8080:80"
+    #ports:
+    #  - "8080:80"
+    networks:
+      - default
+      - reverseproxy_traefik
     depends_on:
       - db
     restart: always
@@ -58,6 +59,25 @@ services:
       driver: json-file
       options:
         max-size: 50m
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=reverseproxy_traefik
+      - traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
+      - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
+
+      - traefik.http.routers.pdns-admin-https.rule=Host(`pdns-admin.alex-j-butler.com`)
+      - traefik.http.routers.pdns-admin-https.entrypoints=websecure
+      - traefik.http.routers.pdns-admin-https.tls=true
+      - traefik.http.routers.pdns-admin-https.service=bitwarden-ui
+
+      - traefik.http.routers.pdns-admin-http.rule=Host(`pdns-admin.alex-j-butler.com`)
+      - traefik.http.routers.pdns-admin-http.entrypoints=web
+      - traefik.http.routers.pdns-admin-http.middlewares=redirect-https
+      - traefik.http.routers.pdns-admin-http.service=pdns
+
+      - traefik.http.services.pdns.loadbalancer.server.port=80
+
+      - "traefik.http.routers.pdns-admin-https.tls.certresolver=myresolver"
     environment:
       - SQLALCHEMY_DATABASE_URI=mysql://pdns:${MYSQL_PASSWORD}@db/powerdnsadmin
       - GUNICORN_TIMEOUT=60
@@ -67,3 +87,7 @@ services:
 volumes:
   pda-mysql:
     driver: local
+
+networks:
+  reverseproxy_traefik:
+    external: true
