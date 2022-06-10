@@ -10,6 +10,7 @@
       entryPoints = ["websecure"]
       service = "service-fluidd"
       rule = "Host(`3d.alex-j-butler.com`)"
+      middlewares = ["traefik-forward-auth@docker"]
       [http.routers.fluidd-https.tls]
         certresolver="myresolver"
     [http.routers.fluidd-http]
