@@ -30,6 +30,30 @@
       rule = "Host(`homeassistant.alex-j-butler.com`)"
       middlewares = ["redirect-https"]
 
+    [http.routers.plex-https]
+      entryPoints = ["websecure"]
+      service = "service-plex"
+      rule = "Host(`plex.alex-j-butler.com`)"
+      [http.routers.plex-https.tls]
+        certresolver="myresolver"
+    [http.routers.plex-sonarr-https]
+      entryPoints = ["websecure"]
+      service = "service-plex-sonarr"
+      rule = "Host(`plex.alex-j-butler.com`) && Path(`/sonarr`)"
+      [http.routers.plex-sonarr-https.tls]
+        certresolver="myresolver"
+    [http.routers.plex-radarr-https]
+      entryPoints = ["websecure"]
+      service = "service-plex-radarr"
+      rule = "Host(`plex.alex-j-butler.com`) && Path(`/radarr`)"
+      [http.routers.plex-radarr-https.tls]
+        certresolver="myresolver"
+    [http.routers.plex-http]
+      entryPoints = ["web"]
+      service = "service-plex"
+      rule = "Host(`plex.alex-j-butler.com`)"
+      middlewares = ["redirect-https"]
+
   # Add the service
     [http.services.service-fluidd]
       [http.services.service-fluidd.loadBalancer]
@@ -40,3 +64,15 @@
         [[http.services.service-ha.loadBalancer.servers]]
           url = "http://10.0.3.5:8123"
           port = "8123"
+    [http.services.service-plex]
+      [http.services.service-plex.loadBalancer]
+        [[http.services.service-plex.loadBalancer.servers]]
+          url = "http://10.0.3.23:32400"
+    [http.services.service-plex-sonarr]
+      [http.services.service-plex-sonarr.loadBalancer]
+        [[http.services.service-plex-sonarr.loadBalancer.servers]]
+          url = "http://10.0.3.23:8989"
+    [http.services.service-plex-radarr]
+      [http.services.service-plex-radarr.loadBalancer]
+        [[http.services.service-plex-radarr.loadBalancer.servers]]
+          url = "http://10.0.3.23:7878"
