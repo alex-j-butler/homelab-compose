@@ -18,9 +18,24 @@
       service = "service-fluidd"
       rule = "Host(`3d.alex-j-butler.com`)"
       middlewares = ["redirect-https"]
+    [http.routers.ha-https]
+      entryPoints = ["websecure"]
+      service = "service-ha"
+      rule = "Host(`homeassistant.alex-j-butler.com`)"
+      [http.routers.ha-https.tls]
+        certresolver="myresolver"
+    [http.routers.ha-http]
+      entryPoints = ["web"]
+      service = "service-ha"
+      rule = "Host(`homeassistant.alex-j-butler.com`)"
+      middlewares = ["redirect-https"]
 
   # Add the service
     [http.services.service-fluidd]
       [http.services.service-fluidd.loadBalancer]
         [[http.services.service-fluidd.loadBalancer.servers]]
           url = "http://10.0.1.39"
+    [http.services.service-ha]
+      [http.services.service-ha.loadBalancer]
+        [[http.services.service-ha.loadBalancer.servers]]
+          url = "http://10.0.3.5:8123"
