@@ -68,7 +68,7 @@ services:
       - traefik.http.routers.pdns-admin-https.rule=Host(`pdns-admin.alex-j-butler.com`)
       - traefik.http.routers.pdns-admin-https.entrypoints=websecure
       - traefik.http.routers.pdns-admin-https.tls=true
-      - traefik.http.routers.pdns-admin-https.service=bitwarden-ui
+      - traefik.http.routers.pdns-admin-https.service=pdns
 
       - traefik.http.routers.pdns-admin-http.rule=Host(`pdns-admin.alex-j-butler.com`)
       - traefik.http.routers.pdns-admin-http.entrypoints=web
