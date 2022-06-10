@@ -12,7 +12,7 @@ services:
       --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
       --providers.file.directory=/FileProvider/
       --providers.file.watch=true
-      --logLevel=WARN
+      --log.level=WARN
       --accesslog
       --accesslog.filepath=/dev/stderr
     #labels:
