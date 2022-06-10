@@ -22,6 +22,9 @@ services:
       - "53:53"
       - "53:53/udp"
       - "8081:8081"
+    networks:
+      - default
+      - reverseproxy_traefik
     environment:
       - PDNS_gmysql_host=db
       - PDNS_gmysql_port=3306
@@ -40,6 +43,18 @@ services:
       - PDNS_default_ttl=1500 
       - PDNS_allow_notify_from=0.0.0.0 
       - PDNS_allow_axfr_ips=127.0.0.1 
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=reverseproxy_traefik
+
+      - traefik.http.routers.pdns-api-https.rule=Host(`pdns-api.alex-j-butler.com`)
+      - traefik.http.routers.pdns-api-https.entrypoints=websecure
+      - traefik.http.routers.pdns-api-https.tls=true
+      - traefik.http.routers.pdns-api-https.service=pdns-api
+
+      - traefik.http.services.pdns-api.loadbalancer.server.port=8081
+
+      - "traefik.http.routers.pdns-api-https.tls.certresolver=myresolver"
 
   web_app:
     image: ngoduykhanh/powerdns-admin:latest
