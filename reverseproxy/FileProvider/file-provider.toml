@@ -39,13 +39,13 @@
     [http.routers.plex-sonarr-https]
       entryPoints = ["websecure"]
       service = "service-plex-sonarr"
-      rule = "Host(`plex.alex-j-butler.com`) && Path(`/sonarr`)"
+      rule = "Host(`plex.alex-j-butler.com`) && PathPrefix(`/sonarr`)"
       [http.routers.plex-sonarr-https.tls]
         certresolver="myresolver"
     [http.routers.plex-radarr-https]
       entryPoints = ["websecure"]
       service = "service-plex-radarr"
-      rule = "Host(`plex.alex-j-butler.com`) && Path(`/radarr`)"
+      rule = "Host(`plex.alex-j-butler.com`) && PathPrefix(`/radarr`)"
       [http.routers.plex-radarr-https.tls]
         certresolver="myresolver"
     [http.routers.plex-http]
