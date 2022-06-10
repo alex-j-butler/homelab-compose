@@ -2,7 +2,7 @@ version: "3"
 
 services:
   prowlarr:
-    image: cr.hotio.dev/hotio/prowlarr
+    image: cr.hotio.dev/hotio/prowlarr:nightly
     ports:
       - "9696:9696"
     environment:
