@@ -32,11 +32,6 @@ services:
     image: thomseddon/traefik-forward-auth:2
     env_file:
       - traefik.env
-    environment:
-      # - PROVIDERS_OIDC_ISSUER_URL=https://login.microsoftonline.com/{tenant id}/v2.0
-      # - PROVIDERS_OIDC_CLIENT_ID=
-      # - PROVIDERS_OIDC_CLIENT_SECRET=""
-      # - SECRET=something-random
     networks:
       - reverseproxy_traefik
     labels:
