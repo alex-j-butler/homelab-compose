@@ -54,6 +54,12 @@
       rule = "Host(`plex.alex-j-butler.com`) && PathPrefix(`/bazarr`)"
       [http.routers.plex-bazarr-https.tls]
         certresolver="myresolver"
+    [http.routers.plex-stats-https]
+      entryPoints = ["websecure"]
+      service = "service-plex-stats"
+      rule = "Host(`plex.alex-j-butler.com`) && PathPrefix(`/stats`)"
+      [http.routers.plex-stats-https.tls]
+        certresolver="myresolver"
     [http.routers.plex-rutorrent-https]
       entryPoints = ["websecure"]
       service = "service-plex-rutorrent"
@@ -96,3 +102,7 @@
       [http.services.service-plex-rutorrent.loadBalancer]
         [[http.services.service-plex-rutorrent.loadBalancer.servers]]
           url = "http://10.0.3.23:8080/rutorrent"
+    [http.services.service-plex-stats]
+      [http.services.service-plex-stats.loadBalancer]
+        [[http.services.service-plex-stats.loadBalancer.servers]]
+          url = "http://10.0.3.23:8181"
