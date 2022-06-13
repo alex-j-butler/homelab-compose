@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  # TCP 6875
+  bookstack:
+    image: lscr.io/linuxserver/bookstack
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - APP_URL=https://docs.alex-j-butler.com
+      - DB_HOST=bookstack_db
+      - DB_USER=bookstack
+      - DB_PASS=${MYSQL_PASSWORD:?SQL_PASS}
+      - DB_DATABASE=bookstackapp
+    volumes:
+      - bookstack:/config
+    networks:
+      - default
+      - reverseproxy_traefik
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=reverseproxy_traefik
+      - traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
+      - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
+
+      - traefik.http.routers.bookstack-https.rule=Host(`docs.alex-j-butler.com`)
+      - traefik.http.routers.bookstack-https.entrypoints=websecure
+      - traefik.http.routers.bookstack-https.tls=true
+      - traefik.http.routers.bookstack-https.service=bookstack
+
+      - traefik.http.routers.bookstack-http.rule=Host(`docs.alex-j-butler.com`)
+      - traefik.http.routers.bookstack-http.entrypoints=web
+      - traefik.http.routers.bookstack-http.middlewares=redirect-https
+      - traefik.http.routers.bookstack-http.service=bookstack
+
+      - traefik.http.services.bookstack.loadbalancer.server.port=80
+
+      - "traefik.http.routers.bookstack-https.tls.certresolver=myresolver"
+    restart: unless-stopped
+    depends_on:
+      - bookstack_db
+  bookstack_db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: bookstack_db
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD:?SQL_PASS}
+      - TZ=Brisbane/Australia
+      - MYSQL_DATABASE=bookstackapp
+      - MYSQL_USER=bookstack
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:?SQL_PASS}
+    volumes:
+      - bookstack-db:/config
+    restart: unless-stopped
+
+volumes:
+  bookstack:
+    driver: local
+  bookstack-db:
+    driver: local
+
+networks:
+  reverseproxy_traefik:
+    external: true
+
