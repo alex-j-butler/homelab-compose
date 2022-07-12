@@ -76,7 +76,7 @@
     [http.services.service-fluidd]
       [http.services.service-fluidd.loadBalancer]
         [[http.services.service-fluidd.loadBalancer.servers]]
-          url = "http://10.0.1.39"
+          url = "http://10.0.3.6"
     [http.services.service-ha]
       [http.services.service-ha.loadBalancer]
         [[http.services.service-ha.loadBalancer.servers]]
