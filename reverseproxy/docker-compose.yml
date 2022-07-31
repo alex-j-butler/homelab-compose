@@ -7,6 +7,8 @@ services:
     # Enables the web UI and tells Traefik to listen to docker
     command: >-
       --api.insecure=true --providers.docker --providers.docker.network=reverseproxy_traefik --providers.docker.endpoint=unix:///var/run/docker.sock --entryPoints.web.address=:80 --entryPoints.websecure.address=:443
+      --entryPoints.syslog.address=:1514 --entryPoints.syslogudp.address=:1514/udp
+      --entryPoints.gelf.address=:12201 --entryPoints.gelfudp.address=:12201/udp
       --certificatesresolvers.myresolver.acme.tlschallenge=true
       --certificatesresolvers.myresolver.acme.email=alex@alex-j-butler.com
       --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
