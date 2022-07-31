@@ -76,7 +76,7 @@ services:
         - traefik.udp.services.graylog-gelfudp.loadbalancer.server.port=12201
 
         - "traefik.http.routers.graylog-https.tls.certresolver=myresolver"
-      ports:
+      # ports:
         # Graylog web interface and REST API
         # - 9000:9000
         # Syslog TCP
