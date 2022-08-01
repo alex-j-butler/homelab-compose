@@ -14,6 +14,25 @@ services:
     restart: unless-stopped
     networks:
       reverseproxy_traefik:
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=reverseproxy_traefik
+      - traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
+      - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
+
+      - traefik.http.routers.checkmk-https.rule=Host(`checkmk.alex-j-butler.com`)
+      - traefik.http.routers.checkmk-https.entrypoints=websecure
+      - traefik.http.routers.checkmk-https.tls=true
+      - traefik.http.routers.checkmk-https.service=checkmk
+
+      - traefik.http.routers.checkmk-http.rule=Host(`checkmk.alex-j-butler.com`)
+      - traefik.http.routers.checkmk-http.entrypoints=web
+      - traefik.http.routers.checkmk-http.middlewares=redirect-https
+      - traefik.http.routers.checkmk-http.service=checkmk
+
+      - traefik.http.services.checkmk.loadbalancer.server.port=5000
+
+      - "traefik.http.routers.checkmk-https.tls.certresolver=myresolver"
 
 networks:
   reverseproxy_traefik:
