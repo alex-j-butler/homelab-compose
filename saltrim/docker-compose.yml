@@ -30,7 +30,7 @@ services:
       - meilisearch
       - bar-assistant
     environment:
-      - API_URL=http://10.0.3.3:800
+      - API_URL=http://10.0.3.3:8003
       - MEILISEARCH_HOST=http://10.0.3.3:7700
     ports:
       - 8084:8080
