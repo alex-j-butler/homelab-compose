@@ -23,7 +23,7 @@ services:
       - traefik.http.routers.mealie-http.middlewares=redirect-https
       - traefik.http.routers.mealie-http.service=mealie
 
-      - traefik.http.services.mealie.loadbalancer.server.port=80
+      - traefik.http.services.mealie.loadbalancer.server.port=9000
 
       - "traefik.http.routers.mealie-https.tls.certresolver=myresolver"
     environment:
