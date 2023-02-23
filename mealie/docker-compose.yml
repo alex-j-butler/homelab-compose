@@ -1,0 +1,52 @@
+version: "3.1"
+services:
+  mealie:
+    container_name: mealie
+    image: hkotel/mealie:latest
+    restart: always
+    networks:
+      - default
+      - reverseproxy_traefik
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=reverseproxy_traefik
+      - traefik.http.middlewares.redirect-https.redirectScheme.scheme=https
+      - traefik.http.middlewares.redirect-https.redirectScheme.permanent=true
+
+      - traefik.http.routers.mealie-https.rule=Host(`meals.alex-j-butler.com`)
+      - traefik.http.routers.mealie-https.entrypoints=websecure
+      - traefik.http.routers.mealie-https.tls=true
+      - traefik.http.routers.mealie-https.service=mealie
+
+      - traefik.http.routers.mealie-http.rule=Host(`meals.alex-j-butler.com`)
+      - traefik.http.routers.mealie-http.entrypoints=web
+      - traefik.http.routers.mealie-http.middlewares=redirect-https
+      - traefik.http.routers.mealie-http.service=mealie
+
+      - traefik.http.services.mealie.loadbalancer.server.port=9925
+
+      - "traefik.http.routers.mealie-https.tls.certresolver=myresolver"
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Australia/Brisbane
+
+      # Default Recipe Settings
+      RECIPE_PUBLIC: 'true'
+      RECIPE_SHOW_NUTRITION: 'true'
+      RECIPE_SHOW_ASSETS: 'true'
+      RECIPE_LANDSCAPE_VIEW: 'true'
+      RECIPE_DISABLE_COMMENTS: 'false'
+      RECIPE_DISABLE_AMOUNT: 'false'
+
+      # Gunicorn
+      # WEB_CONCURRENCY: 2
+      # WORKERS_PER_CORE: 0.5
+      # MAX_WORKERS: 8
+    volumes:
+      - ./mealie/data/:/app/data
+
+
+networks:
+  reverseproxy_traefik:
+    external: true
